@@ -72,6 +72,7 @@ dense_feat_freq_splits = [10, 25]
 
 default_value_of_dense_feat = 0
 
-min_freq_for_sparse_feat_dict = 0 # 特征准入的最低频次，低于该频次的特征将被作为unknown_id，有利于防止过拟合。
+min_freq_for_sparse_feat_dict = 0 # 特征出现次数大于该值时，才加入特征ID映射词典
 
+seq_feat_max_len = 30
 seq_feat_pooling_type = "sum" # 暂时只支持sum和avg
