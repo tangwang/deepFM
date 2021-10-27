@@ -42,13 +42,6 @@ class BaseSolver {
 protected:
   real_t feedLine_libSVM(const string & aline);
   real_t feedLine_CSV(const string & aline);
-  real_t (BaseSolver::*lineProcessor)(const string & aline);
-  
-  virtual void update() {}
-
-  void rotateSampleIdx();
-
-  void batchReduce(FMParamUnit &grad, int count);
 
 protected:
   const FeatManager &feat_manager_;
@@ -59,9 +52,6 @@ protected:
   vector<pair<size_t, CommonFeatContext *>> feat_entries;                 // csv格式数据的特征索引
   vector<string> line_split_buff;   // csv格式数据的解析中间变量
   const size_t batch_size;
-  size_t sample_idx;
-  vector<Sample> batch_samples;
+  Sample sample;
 
-
-  std::unordered_map<FMParamUnit *, ParamNode> batch_params;
 };
