@@ -19,10 +19,10 @@ SRC_PRED_LIB = $(SRC) src/train/lib_fm_pred.cc
 
 DEPEND_INCLUDES =  ${wildcard  src/feature/*.h} \
 	  ${wildcard  src/solver/*.h} \
-	  ${wildcard  src/solver/*.h} \
-	  ${wildcard  src/solver/*.h} \
-	  ${wildcard  src/solver/*.h} \
-	  ${wildcard  src/solver/*.h} \
+	  ${wildcard  src/solver/ftrl/*.h} \
+	  ${wildcard  src/solver/adam/*.h} \
+	  ${wildcard  src/solver/sgdm/*.h} \
+	  ${wildcard  src/solver/adagrad/*.h} \
 	  ${wildcard  src/utils/*.h} \
 	  ${wildcard  third_party/*.h} \
 	  ${wildcard  src/train/*.h} \
@@ -32,8 +32,8 @@ OBJS_PRED = ${patsubst %.cc, %.o, ${SRC_PRED}}
 OBJS_PRED_LIB = ${patsubst %.cc, %.sharedO, ${SRC_PRED_LIB}}
 DEBUG_OBJS_TRAIN = ${patsubst %.cc, %.debugO, ${SRC_TRAIN}}
 
-# all : bin/train bin/train_debug
-all : bin/train bin/pred lib/fm_pred.so 
+# all : bin/train bin/train_debug lib/fm_pred.so bin/pred
+all : bin/train  
 
 CC = g++
 LIB= -lpthread

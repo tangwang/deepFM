@@ -23,6 +23,7 @@ dest_type cast_ref_type(const src_type &s) {
 // str -> int
 template <>
 inline int cast_ref_type<std::string, int>(const std::string &s) {
+  // 不用std::stoi(s); std::stoi, std::stof在值非法时会抛出异常
   return atoi(s.c_str());
 }
 
