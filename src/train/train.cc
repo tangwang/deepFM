@@ -70,10 +70,8 @@ int main(int argc, char *argv[]) {
   }
 
 // 如果是csv格式，解析头行
-  if (train_opt.data_formart == TrainOption::DataFormart_CSV) {
-    string csv_header;
-    std::getline(*input_stream, csv_header);
-    utils::split_string(csv_header, train_opt.feat_seperator, train_opt.csv_columns);
+  if (train_opt.data_formart == TrainOption::DataFormart_CSV && train_opt.csv_columns.empty()) {
+    std::getline(*input_stream, train_opt.csv_columns);
   }
 
   // init trainning workers
@@ -112,7 +110,7 @@ int main(int argc, char *argv[]) {
     }
 
     validator = new TrainWorker("valid", 0);
-    validator->RegisteSolver(creatSolver(feat_manager));
+    validator->RegisteSolver(new BaseSolver(feat_manager));
     validator->StartValidationLoop(valid_stream);
     std::cout << "start validation thread " << "..." << endl;
   }

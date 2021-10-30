@@ -78,8 +78,8 @@ bool DenseFeatConfig::initParams(unordered_map<string, shared_ptr<ParamContainer
         all_split_position_and_mapping_ids[split_idx].second);
   }
 
-  param_container = creatParamContainer(onehot_feat_dimension, (feat_id_t)feat_ids_of_each_buckets.size());
-  loadModel();
+  param_container = std::make_shared<ParamContainer<FtrlParamUnit>>(onehot_feat_dimension, (feat_id_t)feat_ids_of_each_buckets.size());
+  if (!loadModel()) return false;
 
   // 提前取出参数位置
    feat_params_of_each_buckets.resize(feat_ids_of_each_buckets.size());
@@ -136,7 +136,7 @@ void from_json(const json &j, DenseFeatConfig &p) {
   if (j.contains("sparse_by_splits"))   j.at("sparse_by_splits").get_to(p.sparse_by_splits);
 }
 
-DenseFeatContext::DenseFeatContext(const DenseFeatConfig &cfg) : cfg_(cfg), sample_idx(-1) {
+DenseFeatContext::DenseFeatContext(const DenseFeatConfig &cfg) : cfg_(cfg) {
   feat_cfg = &cfg_;
   batch_backward_nodes.resize(train_opt.batch_size);
 }
@@ -153,7 +153,7 @@ int DenseFeatContext::feedSample(const char *feat_str, size_t feat_str_len, FmLa
     return -1;
   }
 
-  int bucket_id = cfg_.getFeaBucketId(orig_x);
+  bucket_id = cfg_.getFeaBucketId(orig_x);
   feat_params = &cfg_.feat_params_of_each_buckets[bucket_id];
 
   DEBUG_OUT << "feedSample " << cfg_.name << " orig_x " << orig_x << " bucket_id " << bucket_id << endl;

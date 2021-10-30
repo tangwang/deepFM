@@ -7,15 +7,16 @@ SRC = src/feature/dense_feat.cc \
       src/feature/varlen_sparse_feat.cc \
       src/feature/feat_manager.cc \
       src/train/train_opt.cc \
-      src/solver/solver_factory.cc \
       src/solver/base_solver.cc \
 	  third_party/murmur_hash3/MurmurHash3.cc 
 
 SRC_TRAIN = $(SRC) src/train/train.cc 
 
-SRC_PRED = $(SRC) src/train/predict.cc 
+SRC_PRED = $(SRC) src/predict/predict.cc 
 
-SRC_PRED_LIB = $(SRC) src/train/lib_fm_pred.cc 
+SRC_LIB_HEADER = src/predict/lib_fm_pred.cc 
+INCLUDE_LIB_HEADER = src/predict/lib_fm_pred.h
+SRC_PRED_LIB = $(SRC) $(SRC_LIB_HEADER)
 
 DEPEND_INCLUDES =  ${wildcard  src/feature/*.h} \
 	  ${wildcard  src/solver/*.h} \

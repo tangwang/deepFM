@@ -2,6 +2,7 @@
  *  Copyright (c) 2021 by exFM Contributors
  */
 #include "train/train_opt.h"
+#include "utils/str_utils.h"
 
 TrainOption train_opt;
 
@@ -16,6 +17,10 @@ bool TrainOption::parse_cfg_and_cmdlines(int argc, char *argv[]) {
   string feat_cfg;
   arg_parser.parse_arg("feat_cfg", feat_cfg, string(),
                    "feature config name(dir) under config dir", true);
+
+  // csv_columns 约定通过csv header line读取，否则容易引起混乱
+  // arg_parser.parse_arg("csv_columns", csv_columns, string(),
+  //                  "set csv_columns when your data_format is csv , and you csv file had no header line", false);
 
   feature_config_path = string("config/") + feat_cfg + "/feature_config.json";
   mapping_dict_path = string("config/") + feat_cfg + "/feat_id_dict/";
@@ -109,8 +114,8 @@ bool TrainOption::parse_cfg_and_cmdlines(int argc, char *argv[]) {
   arg_parser.parse_arg("ftrl.l2v", ftrl.l2_reg_V, 5.0,  "l2 regularization of V");
 
   string str_dnn_feature_columns;
-  arg_parser.parse_arg("dnn_feature_columns", str_dnn_feature_columns, "",  "\",\" joined feature names used by deep part of the model");
-  split_string(str_dnn_feature_columns, ',', dnn_feature_columns);
+  arg_parser.parse_arg("dnn_feature_columns", str_dnn_feature_columns, string(),  "\",\" joined feature names used by dnn");
+  utils::split_string(str_dnn_feature_columns, ',', dnn_feature_columns);
 
   // EarlyStoping
   arg_parser.parse_arg("early_stoping.min_delta", early_stoping.min_delta, 0.0001,  "validation auc提升大于该值才算improvement");

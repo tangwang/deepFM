@@ -30,10 +30,10 @@ class MLPParam<dim1, dim2> {
 // 每个线程一个，各自积累梯度。
 // 积累了一个batch的梯度后，提交到全局参数做一次update
 template <int dim1, int dim2>
-class LocalMLP {
+class MLPLocal {
  public:
-  LocalMLP(size_t input_size) : hidden1(input_size) {}
-  ~LocalMLP() {}
+  MLPLocal(size_t input_size) : hidden1(input_size) {}
+  ~MLPLocal() {}
   
   void forward(const vector<real_t>& input,
                array<real_t, dim2>& out_data) {
@@ -45,7 +45,7 @@ class LocalMLP {
     }
   }
 
-  void push(GlobalMLP & param_server) {
+  void push(MLPServer & param_server) {
     // 先做batch_reduce
     // 提交到参数param server
     param_server.push(propagation_context);
@@ -60,10 +60,10 @@ class LocalMLP {
 };
 
 template <int dim1, int dim2>
-class GlobalMLP {
+class MLPServer {
  public:
-  GlobalMLP(size_t input_size) : hidden1(input_size) {}
-  ~GlobalMLP() {}
+  MLPServer(size_t input_size) : hidden1(input_size) {}
+  ~MLPServer() {}
 
   void initParam() {}
 
@@ -84,16 +84,18 @@ class GlobalMLP {
                                  std::sqrt(bias_correction2) / bias_correction1)
                               : lr;
 
+    // i_hidden1
     size_t input_size = param.hidden1.size();
-    for (size_t i_hidden1 = 0; i_hidden1 < input_size; i_hidden1++) {
-      array<real_t, dim1> &i_hidden1 = param.hidden1[i_hidden1];
-      for (size_t i_hidden2 = 0; i_hidden2 < dim1; i_hidden2++) {
-        array<real_t, dim2> &i_hidden2 = param.hidden2[i_hidden2];
-        for (size_t i_out = 0; i_out < dim2; i_out++) {
-          real_t xxx = i_hidden2[i_out];
-        }
+    for (size_t i = 0; i < input_size; i++) {
+      array<real_t, dim1> &i_hidden1 = param.hidden1[i];
+      for (size_t j = 0; j < dim1; j++) {
+        real_t & hidden1_i_j = i_hidden1[j];
+
       }
     }
+
+    // i_hidden2
+
 
     // update w
     real_t &w = this->fm_param.w;

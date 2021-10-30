@@ -23,7 +23,6 @@ class TrainWorker {
     }
   }
 
-  // TODO solver不用指针，直接做成内部成员
   void RegisteSolver(BaseSolver *_solver) {
     if (solver) {
       delete solver;

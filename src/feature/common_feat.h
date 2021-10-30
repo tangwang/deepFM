@@ -4,6 +4,7 @@
 #pragma once
 // #include "solver/solver_factory.h"
 #include "solver/parammeter_container.h"
+#include "solver/ftrl_param.h"
 #include "nlohmann/json.hpp"
 #include "synchronize/mutex_adapter.h"
 #include "utils/base.h"

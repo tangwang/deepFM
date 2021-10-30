@@ -57,7 +57,7 @@ void Sample::backward() {
 }
 
 BaseSolver::BaseSolver(const FeatManager &feat_manager)
-    : feat_manager_(feat_manager), batch_size(train_opt.batch_size), sample_idx(0), batch_samples(train_opt.batch_size) {
+    : feat_manager_(feat_manager), batch_size(train_opt.batch_size) {
   for (const auto &v : feat_manager_.dense_feat_cfgs) {
     dense_feats.emplace_back(v);
   }
@@ -67,9 +67,8 @@ BaseSolver::BaseSolver(const FeatManager &feat_manager)
   for (const auto &v : feat_manager_.varlen_feat_cfgs) {
     varlen_feats.emplace_back(v);
   }
-  for (auto & sample : batch_samples) {
-    sample.fm_layer_nodes.resize(dense_feats.size() + sparse_feats.size() + varlen_feats.size());
-  }
+
+  sample.fm_layer_nodes.resize(dense_feats.size() + sparse_feats.size() + varlen_feats.size());
 
   for (auto &v : dense_feats) {
     feat_map[v.feat_cfg->name] = &v;
@@ -81,13 +80,22 @@ BaseSolver::BaseSolver(const FeatManager &feat_manager)
     feat_map[v.feat_cfg->name] = &v;
   }
   if (train_opt.data_formart == TrainOption::DataFormart_CSV) {
-    for (size_t i = 0; i < train_opt.csv_columns.size(); i++) {
-      const string &column = train_opt.csv_columns[i];
+    utils::split_string(train_opt.csv_columns, train_opt.feat_seperator, csv_columns);
+    cout << "csv_columns size: " << csv_columns.size() << endl;
+    cout << "csv_columns : " << csv_columns << endl;
+    assert(!csv_columns.empty());
+    
+    for (size_t i = 0; i < csv_columns.size(); i++) {
+      const string &column = csv_columns[i];
       auto got = feat_map.find(column);
       if (got != feat_map.end()) {
         feat_entries.push_back(make_pair(i, got->second));
      }
     }
+    if (feat_entries.size() != feat_map.size()) {
+        cerr << "some feature_name not found in csv header, check your feature_config or your csv header line." << endl;
+        std::abort();
+     }
   }
 }
 
@@ -135,7 +143,7 @@ real_t BaseSolver::feedLine_CSV(const string & aline) {
   line_split_buff.clear();
   utils::split_string(aline, train_opt.feat_seperator, line_split_buff);
 
-  if (unlikely(line_split_buff.size() < train_opt.csv_columns.size() || line_split_buff[0].empty())) {
+  if (unlikely(line_split_buff.size() < csv_columns.size() || line_split_buff[0].empty())) {
     return -1;
   }
   

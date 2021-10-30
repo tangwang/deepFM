@@ -147,10 +147,11 @@ bool SparseFeatConfig::initParams(unordered_map<string, shared_ptr<ParamContaine
   }
 
   if (!embedding_existed) {
-    param_container = creatParamContainer(vocab_size, mutex_nums);
+    param_container = std::make_shared<ParamContainer<FtrlParamUnit>>(vocab_size, mutex_nums);
     if (!shared_embedding_name.empty()) shared_param_container_map[shared_embedding_name] = param_container;
     // 共享embedding的feature，param_container的创建者负责warmup，以保证只warm_start()一次
-    loadModel();
+    ret = loadModel();
+    if (!ret) return ret;
   }
 
   return ret;

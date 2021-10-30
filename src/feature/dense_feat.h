@@ -96,7 +96,8 @@ class DenseFeatContext : public CommonFeatContext {
   int feedSample(const char *feat_str, size_t feat_str_len, FmLayerNode & fm_node);
 
   virtual void backWard(FMParamUnit & backward_grad);
-  int sample_idx;
+
+  int bucket_id;
   // pair.first = bucket_id, pair=second = grad
   vector<pair<int, FMParamUnit>> batch_backward_nodes;
 

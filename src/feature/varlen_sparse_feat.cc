@@ -9,7 +9,7 @@ VarlenSparseFeatConfig::VarlenSparseFeatConfig() {}
 VarlenSparseFeatConfig::~VarlenSparseFeatConfig() {}
 
 VarlenSparseFeatContext::VarlenSparseFeatContext(const VarlenSparseFeatConfig &cfg)
-    : cfg_(cfg), sample_idx(-1) {
+    : cfg_(cfg) {
   feat_cfg = &cfg_;
    feat_ids.reserve(cfg_.max_len);
 }

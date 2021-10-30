@@ -54,4 +54,6 @@ protected:
   const size_t batch_size;
   Sample sample;
 
+  vector<string> csv_columns;
+
 };
