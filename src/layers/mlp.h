@@ -67,6 +67,11 @@ class MLPServer {
 
   void initParam() {}
 
+  void sync(MLPParam<dim1, dim2, PropagationContext> & grad, MLPParam<dim1, dim2, real_t> & to) {
+    push(grad);
+    pull(to);
+  }
+
   void push(MLPParam<dim1, dim2, PropagationContext> & grad) {
 
     const real_t beta1 = train_opt.adam.beta1;
