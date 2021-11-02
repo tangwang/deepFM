@@ -80,9 +80,11 @@ BaseSolver::BaseSolver(const FeatManager &feat_manager)
     feat_map[v.feat_cfg->name] = &v;
   }
   if (train_opt.data_formart == TrainOption::DataFormart_CSV) {
-    utils::split_string(train_opt.csv_columns, train_opt.feat_seperator, csv_columns);
-    cout << "csv_columns size: " << csv_columns.size() << endl;
-    cout << "csv_columns : " << csv_columns << endl;
+    utils::split_string(train_opt.csv_columns, ',', csv_columns);
+
+    VERBOSE_OUT(1) << "csv_columns size: " << csv_columns.size() << endl;
+    VERBOSE_OUT(1) << "csv_columns : " << csv_columns << endl;
+
     assert(!csv_columns.empty());
     
     for (size_t i = 0; i < csv_columns.size(); i++) {
@@ -93,8 +95,8 @@ BaseSolver::BaseSolver(const FeatManager &feat_manager)
      }
     }
     if (feat_entries.size() != feat_map.size()) {
-        cerr << "some feature_name not found in csv header, check your feature_config or your csv header line." << endl;
-        std::abort();
+        cerr << "feature names not match csv_columns, check your feature_config or your csv header line, exit." << endl;
+        std::exit(1);
      }
   }
 }
@@ -113,7 +115,7 @@ real_t BaseSolver::feedLine_libSVM(const string & aline) {
   }
 
   // parse label
-  sample.label.i = pos[0] == '1' ? 1 : -1;
+  sample.label.i = int(pos) > 0 ? 1 : -1;
 
   // parse featrues
   size_t fm_node_idx = 0;
@@ -148,7 +150,7 @@ real_t BaseSolver::feedLine_CSV(const string & aline) {
   }
   
   // parse label
-  sample.label.i = line_split_buff[0][0] == '1' ? 1 : -1;
+  sample.label.i = int(pos) > 0 ? 1 : -1;
 
   // parse featrues
   size_t fm_node_idx = 0;

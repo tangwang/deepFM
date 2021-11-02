@@ -18,9 +18,8 @@ bool TrainOption::parse_cfg_and_cmdlines(int argc, char *argv[]) {
   arg_parser.parse_arg("feat_cfg", feat_cfg, string(),
                    "feature config name(dir) under config dir", true);
 
-  // csv_columns 约定通过csv header line读取，否则容易引起混乱
-  // arg_parser.parse_arg("csv_columns", csv_columns, string(),
-  //                  "set csv_columns when your data_format is csv , and you csv file had no header line", false);
+  arg_parser.parse_arg("csv_columns", csv_columns, string(),
+                   "set csv_columns when your data_format is csv, and your csv file had no header line", false);
 
   feature_config_path = string("config/") + feat_cfg + "/feature_config.json";
   mapping_dict_path = string("config/") + feat_cfg + "/feat_id_dict/";
@@ -34,14 +33,14 @@ bool TrainOption::parse_cfg_and_cmdlines(int argc, char *argv[]) {
   string str_data_formart;
   arg_parser.parse_arg(
       "data_formart", str_data_formart, string(),
-      "train and validation formart, support libSVM / CSV (case insensitive)",
+      "train and validation formart, support libSVM / CSV",
       true);
   if (0 == strcasecmp(str_data_formart.c_str(), "libSVM")) {
     data_formart = DataFormart_libSVM;
   } else if (0 == strcasecmp(str_data_formart.c_str(), "CSV")) {
     data_formart = DataFormart_CSV;
   } else {
-    cerr << "arg data_formart must be libSVM / CSV (case insensitive)" << endl;
+    cerr << "arg data_formart must be libSVM / CSV" << endl;
     return false;
   }
 

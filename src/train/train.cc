@@ -69,9 +69,14 @@ int main(int argc, char *argv[]) {
     input_stream = &std::cin;
   }
 
-// 如果是csv格式，解析头行
-  if (train_opt.data_formart == TrainOption::DataFormart_CSV && train_opt.csv_columns.empty()) {
-    std::getline(*input_stream, train_opt.csv_columns);
+  // 如果是csv格式并且未设置csv_columns，则读取第一行作为csv_columns
+  bool has_csv_header = false;
+  if (train_opt.data_formart == TrainOption::DataFormart_CSV) {
+    if (train_opt.csv_columns.empty()) {
+      has_csv_header = true;
+      std::getline(*input_stream, train_opt.csv_columns);
+      utils::replace_all(train_opt.csv_columns, std::to_string(train_opt.feat_seperator), std::to_string(','));
+    }
   }
 
   // init trainning workers
@@ -104,7 +109,7 @@ int main(int argc, char *argv[]) {
       return -1;
     }
 
-    if (train_opt.data_formart == TrainOption::DataFormart_CSV) {
+    if (has_csv_header) {
       string csv_header;
       std::getline(valid_stream, csv_header);
     }

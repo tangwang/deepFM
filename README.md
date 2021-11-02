@@ -13,4 +13,6 @@
 2. 不再支持多种优化器，在fm部分选用ftrl，deep部分用adam 。
 3. early stoping
 4. 一个项目搞定特征处理、训练、在线的粗排（先对topN进行FM打分）、精排（对粗排的topM补充计算deep网络的打分）。
+5. 稠密特征除了离散化后进入FM，还可以归一化后进入MLP
+6. sparse特征可以附带embedding属性，作为常量embedding并入MLP网络的输入
 
